@@ -15,5 +15,19 @@ datasource db {
 
 model User {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  name String?
+  email String @unique @db.ObjectId
+  profile Profile?
+  posts Post[]
+}
+
+model Profile {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  user User @relation(fields:[userEmail], references:[email])
+  userEmail String @unique @db.ObjectId
+}
+
+model Post {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  authorEmail String @db.ObjectId
+  author User @relation(fields:[authorEmail], references: [email])
 }
