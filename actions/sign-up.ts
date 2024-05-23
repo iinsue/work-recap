@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 
 import { db } from "@/lib/db";
 import { SignupSchema } from "@/schemas";
+import { getUserByEmail } from "@/data/user";
 
 export const signup = async (values: z.infer<typeof SignupSchema>) => {
   const validatedFields = SignupSchema.safeParse(values);
@@ -16,11 +17,7 @@ export const signup = async (values: z.infer<typeof SignupSchema>) => {
   const { email, password, name } = validatedFields.data;
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const existingUser = await db.user.findUnique({
-    where: {
-      email,
-    },
-  });
+  const existingUser = await getUserByEmail(email);
 
   if (existingUser) {
     return { error: "Email already in use!" };
