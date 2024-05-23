@@ -1,23 +1,43 @@
 "use client";
 
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { useState, useTransition } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { LoginSchema } from "@/schemas";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { Input } from "../ui/input";
-import { useTransition } from "react";
-import { Button } from "../ui/button";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
 import { CardWrapper } from "./card-wrapper";
 import { FormError } from "../form-error";
 import { FormSuccess } from "../form-success";
 
 export const LoginForm = () => {
-  const form = useForm();
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [isPending, startTransition] = useTransition();
+
+  const form = useForm<z.infer<typeof LoginSchema>>({
+    resolver: zodResolver(LoginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+    setError("Error");
+    setSuccess("Success");
+  };
 
   return (
     <>
@@ -27,7 +47,7 @@ export const LoginForm = () => {
         buttonLabel="계정이 없으신가요?"
       >
         <Form {...form}>
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
             <div className="space-y-4">
               <FormField
                 control={form.control}
@@ -43,6 +63,7 @@ export const LoginForm = () => {
                         disabled={isPending}
                       />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -60,12 +81,13 @@ export const LoginForm = () => {
                         disabled={isPending}
                       />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-            <FormError message="error" />
-            <FormSuccess message="success" />
+            <FormError message={error} />
+            <FormSuccess message={success} />
             <Button type="submit" disabled={isPending} className="w-full">
               Login
             </Button>
