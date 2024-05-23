@@ -9,25 +9,35 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  email String @unique @db.ObjectId
-  profile Profile?
-  posts Post[]
+  id String @id @default(cuid())
+  name String?
+  email String? @unique
+  emailVerified DateTime?
+  image String?
+  password String?
+  accounts Account[]
 }
 
-model Profile {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  user User @relation(fields:[userEmail], references:[email])
-  userEmail String @unique @db.ObjectId
-}
+model Account {
+  id String @id @default(cuid())
+  userId String
+  type String
+  provider String
+  providerAccountId String
+  refresh_token String? @db.Text
+  access_token String? @db.Text
+  expires_at Int?
+  token_type String?
+  scope String?
+  id_token String? @db.Text
+  session_staet String?
 
-model Post {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  authorEmail String @db.ObjectId
-  author User @relation(fields:[authorEmail], references: [email])
+  user User @relation(fields:[userId], references:[id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
 }
