@@ -21,6 +21,8 @@ import { CardWrapper } from "./card-wrapper";
 import { FormError } from "../form-error";
 import { FormSuccess } from "../form-success";
 import { login } from "@/actions/login";
+import { Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const LoginForm = () => {
   const [error, setError] = useState<string | undefined>("");
@@ -97,6 +99,11 @@ export const LoginForm = () => {
             <FormError message={error} />
             <FormSuccess message={success} />
             <Button type="submit" disabled={isPending} className="w-full">
+              <Loader2
+                className={cn(
+                  isPending ? "h-5 w-5 animate-spin mr-2" : "hidden"
+                )}
+              />
               Login
             </Button>
           </form>

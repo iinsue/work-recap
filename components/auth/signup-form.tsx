@@ -22,6 +22,8 @@ import { FormError } from "../form-error";
 import { FormSuccess } from "../form-success";
 
 import { signup } from "@/actions/sign-up";
+import { Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const SignupForm = () => {
   const [error, setError] = useState<string | undefined>("");
@@ -116,6 +118,11 @@ export const SignupForm = () => {
             <FormError message={error} />
             <FormSuccess message={success} />
             <Button type="submit" disabled={isPending} className="w-full">
+              <Loader2
+                className={cn(
+                  isPending ? "h-5 w-5 animate-spin mr-2" : "hidden"
+                )}
+              />
               회원가입
             </Button>
           </form>
