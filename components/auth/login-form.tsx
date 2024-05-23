@@ -13,6 +13,7 @@ import { useTransition } from "react";
 import { Button } from "../ui/button";
 import { CardWrapper } from "./card-wrapper";
 import { FormError } from "../form-error";
+import { FormSuccess } from "../form-success";
 
 export const LoginForm = () => {
   const form = useForm();
@@ -64,6 +65,7 @@ export const LoginForm = () => {
               />
             </div>
             <FormError message="error" />
+            <FormSuccess message="success" />
             <Button type="submit" disabled={isPending} className="w-full">
               Login
             </Button>
